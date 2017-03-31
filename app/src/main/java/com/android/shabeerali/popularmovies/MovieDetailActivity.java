@@ -110,8 +110,9 @@ public class MovieDetailActivity extends AppCompatActivity {
                 return null;
             }
 
-            String fetch_filter = params[0];
-            URL moviesRequestUrl = NetworkUtils.buildUrl(fetch_filter);
+            String movie_id = params[0];
+            //URL moviesRequestUrl = NetworkUtils.buildUrl(fetch_filter);
+            URL moviesRequestUrl = NetworkUtils.getMovieRequestsUrl(NetworkUtils.GET_MOVIE_DETAILS, movie_id);
 
             try {
                 String jsonMovieInfoResponse = NetworkUtils

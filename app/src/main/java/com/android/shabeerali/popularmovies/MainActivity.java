@@ -2,6 +2,7 @@ package com.android.shabeerali.popularmovies;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -9,9 +10,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Display;
+import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -67,21 +67,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             }
         });
 
-        Display display = ((WindowManager)
-                getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        int screenOrientation = display.getRotation();
-
-        switch (screenOrientation)
-        {
-            default:
-            case ORIENTATION_0: // Portrait
-                lLayout = new GridLayoutManager(MainActivity.this, 2);
-                break;
-            case ORIENTATION_90: // Landscape right
-            case ORIENTATION_270: // Landscape left
-                lLayout = new GridLayoutManager(MainActivity.this, 3);
-                break;
+        Configuration config = this.getResources().getConfiguration();
+        Log.e("SHABEER", "S: " +config.smallestScreenWidthDp);
+        if (config.smallestScreenWidthDp >= 720) {
+            lLayout = new GridLayoutManager(MainActivity.this, 4);
+        } else  if (config.smallestScreenWidthDp >= 600) {
+            lLayout = new GridLayoutManager(MainActivity.this,3);
+        }else {
+            lLayout = new GridLayoutManager(MainActivity.this, 2);
         }
+
 
         mRecyclerView = (RecyclerView)findViewById(R.id.rv_movie_posters);
         mRecyclerView.setHasFixedSize(true);
@@ -162,15 +157,20 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             }
 
             String fetch_filter = params[0];
-            URL moviesRequestUrl = NetworkUtils.buildUrl(fetch_filter);
+            //URL moviesRequestUrl = NetworkUtils.buildUrl(fetch_filter);
+            int requestId = fetch_filter.equals("top_rated")? NetworkUtils.GET_TOP_RATED_MOVIES : NetworkUtils.GET_POPULAR_MOVIES;
+            URL moviesRequestUrl = NetworkUtils.getMovieRequestsUrl(requestId, "");
 
             try {
                 String jsonMovieInfoResponse = NetworkUtils
                         .getResponseFromHttpUrl(moviesRequestUrl);
-
-                MovieObject[] movieObjects = MovieDataJsonParser
-                        .parseMovieCollectionInformation( jsonMovieInfoResponse);
-                return movieObjects;
+                if (jsonMovieInfoResponse != null) {
+                    MovieObject[] movieObjects = MovieDataJsonParser
+                            .parseMovieCollectionInformation(jsonMovieInfoResponse);
+                    return movieObjects;
+                } else {
+                    return null;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;

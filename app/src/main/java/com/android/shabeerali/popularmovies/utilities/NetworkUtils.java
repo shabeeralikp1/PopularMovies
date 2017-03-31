@@ -1,6 +1,7 @@
 package com.android.shabeerali.popularmovies.utilities;
 
 import android.net.Uri;
+import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,25 +21,81 @@ public class NetworkUtils {
 
     public static final String MOVIE_POSTER_URL = "http://image.tmdb.org/t/p/w185/";
 
+    private final static String API_KEY = "api_key";
+
+    private final static String MOVIES_POPULAR = "popular";
+
+    private final static String MOVIES_TOP_RATED= "top_rated";
+
+
+    // API Request IDs
+
+    /*
+     * Request ID for getting popular movies
+     */
+    public final static int  GET_POPULAR_MOVIES = 0;
+
+    /*
+     * Request ID for getting top rated movies
+     */
+    public final static int  GET_TOP_RATED_MOVIES = 1;
+
+    /*
+     * Request ID for getting a movie details
+     */
+    public final static int  GET_MOVIE_DETAILS = 2;
+
+
+    // API Key to be used in request
     private static  String api_key = "" ;
 
+    /**
+     * Sets the API key to be used in building requesy URLs
+     *
+     * @param apikey API Key received from themoviedb
+     * @return The URL to use to query the moviedb server.
+     */
     public static void setApiKey(String apikey) {
         api_key = apikey;
     }
 
-    final static String API_KEY = "api_key";
 
     /**
-     * Builds the URL used to talk to the moviedb server using the given parameter.
+     * Builds the URL used to talk to the moviedb server based on the given request type.
      *
-     * @param param The path to be used to query. May be movie id or sorting option
-     * @return The URL to use to query the weather server.
+     * @param requestType request type for movie APIs
+     * @param movie_id  movie id
+     * @return The URL to use to query the moviedb server.
      */
-    public static URL buildUrl(String param) {
-        Uri builtUri = Uri.parse(MOVIE_DB_URL).buildUpon()
-                .appendPath(param)
-                .appendQueryParameter(API_KEY, api_key)
-                .build();
+    public static URL getMovieRequestsUrl(int requestType, String movie_id) {
+        Uri.Builder builder = null;
+        Uri builtUri = null;
+
+        if(api_key.equals("")) {
+            Log.e(TAG, "API Key NOT SET. Please use NetworkUtils.setApiKey(String apikey)");
+        }
+
+        switch(requestType) {
+            case GET_POPULAR_MOVIES:
+                builder = Uri.parse(MOVIE_DB_URL).buildUpon()
+                           .appendPath(MOVIES_POPULAR);
+                break;
+
+            case GET_TOP_RATED_MOVIES:
+                builder = Uri.parse(MOVIE_DB_URL).buildUpon()
+                        .appendPath(MOVIES_TOP_RATED);
+                break;
+
+            case GET_MOVIE_DETAILS:
+                builder = Uri.parse(MOVIE_DB_URL).buildUpon()
+                        .appendPath(movie_id);
+                break;
+            default:
+                Log.e(TAG, "API request not Implemented");
+                return null;
+
+        }
+        builtUri = builder.appendQueryParameter(API_KEY, api_key).build();
 
         URL url = null;
         try {
@@ -46,6 +103,7 @@ public class NetworkUtils {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+        Log.d(TAG, "Request URL: " + url);
         return url;
     }
 

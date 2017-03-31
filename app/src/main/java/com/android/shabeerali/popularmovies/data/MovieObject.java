@@ -2,7 +2,7 @@ package com.android.shabeerali.popularmovies.data;
 
 
 /*
- *  Class for saving Movie detailed informations
+ *  Class for  Movie detailed information object
  */
 public class MovieObject {
     private int id;
