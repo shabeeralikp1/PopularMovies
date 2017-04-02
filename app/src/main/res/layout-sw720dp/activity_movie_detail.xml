@@ -18,8 +18,8 @@
 
             <ImageView
                 android:id="@+id/iv_detail_view"
-                android:layout_width="600dp"
-                android:layout_height="600dp"
+                android:layout_width="550dp"
+                android:layout_height="550dp"
                 android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
                 android:layout_gravity="center_horizontal"/>
@@ -77,7 +77,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/bt_mv_detail_try_again"
-            android:text="Try Again"
+            android:text="@string/try_again"
             android:layout_gravity="center"
             />
     </LinearLayout>

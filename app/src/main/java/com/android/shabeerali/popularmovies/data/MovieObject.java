@@ -23,7 +23,6 @@ public class MovieObject {
         this.rating = 0;
     }
 
-
     public String getTitle() {
         return title;
     }

@@ -19,14 +19,31 @@ public class NetworkUtils {
 
     private static final String MOVIE_DB_URL = "http://api.themoviedb.org/3/movie";
 
-    public static final String MOVIE_POSTER_URL = "http://image.tmdb.org/t/p/w185/";
+    public static final String MOVIE_POSTER_URL_W185 = "http://image.tmdb.org/t/p/w185/";
 
     private final static String API_KEY = "api_key";
+
+    private final static String LANGUAGE = "language";
 
     private final static String MOVIES_POPULAR = "popular";
 
     private final static String MOVIES_TOP_RATED= "top_rated";
 
+    public final static String MOVIES_DB_IMAGE_SIZE_W92= "w92";
+
+    public final static String MOVIES_DB_IMAGE_SIZE_W154= "w154";
+
+    public final static String MOVIES_DB_IMAGE_SIZE_W185= "w185";
+
+    public final static String MOVIES_DB_IMAGE_SIZE_W342= "w342";
+
+    public final static String MOVIES_DB_IMAGE_SIZE_W500= "w500";
+
+    public final static String MOVIES_DB_IMAGE_SIZE_W780= "w780";
+
+    public final static String MOVIES_DB_IMAGE_SIZE_ORIGINAL= "original";
+
+    public static String response_language = "en_US";
 
     // API Request IDs
 
@@ -46,19 +63,82 @@ public class NetworkUtils {
     public final static int  GET_MOVIE_DETAILS = 2;
 
 
+    private static  String poster_image_base_url = "http://image.tmdb.org/t/p/" ;
+
     // API Key to be used in request
     private static  String api_key = "" ;
+
+    // Poster image size to be used in request
+    private static  String poster_image_size = "w185" ;
+
+    // Poster image request url
+    private static  String poster_image_url = "http://image.tmdb.org/t/p/w185/" ;
 
     /**
      * Sets the API key to be used in building requesy URLs
      *
      * @param apikey API Key received from themoviedb
-     * @return The URL to use to query the moviedb server.
      */
     public static void setApiKey(String apikey) {
         api_key = apikey;
     }
 
+
+    /**
+     * Sets the image size for the poster images
+     *
+     * @param url url for the poster image
+     */
+    public static void setPosterImageUrl(String url) {
+        poster_image_url = url;
+    }
+
+    /**
+     * Gets the image size for the poster images
+     *
+     * @return  poster image url
+     */
+    public static String getPosterImageUrl() {
+        return poster_image_url ;
+    }
+
+    /**
+     * Sets the image size for the poster images
+     *
+     * @param size size for the poster image
+     */
+    public static void setImageSize(String size) {
+        poster_image_size = size;
+        poster_image_url = poster_image_base_url + size + "/";
+    }
+
+    /**
+     * Gets the image size for the poster images
+     *
+     * @return  poster image size
+     */
+    public static String getImageSize() {
+        return poster_image_size ;
+    }
+
+
+    /**
+     * Gets the language needed for server response
+     *
+     * @return  language used for server response
+     */
+    public static String getResponselanguage() {
+        return response_language ;
+    }
+
+    /**
+     * Sets the image size for the poster images
+     *
+     * @param language  language needed for server response
+     */
+    public static void setResponselanguage(String language) {
+        response_language = language;
+    }
 
     /**
      * Builds the URL used to talk to the moviedb server based on the given request type.
@@ -95,7 +175,9 @@ public class NetworkUtils {
                 return null;
 
         }
-        builtUri = builder.appendQueryParameter(API_KEY, api_key).build();
+        builtUri = builder.appendQueryParameter(API_KEY, api_key)
+                           .appendQueryParameter(LANGUAGE, response_language)
+                           .build();
 
         URL url = null;
         try {

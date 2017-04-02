@@ -8,10 +8,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.shabeerali.popularmovies.data.MovieObject;
+import com.android.shabeerali.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 
-
+/**
+ * {@link MovieAdapter} exposes a list of movie information to a
+ * {@link android.support.v7.widget.RecyclerView}
+ */
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapterViewHolder> {
 
     private MovieObject[] mMoviesData;
@@ -37,7 +41,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
 
     @Override
     public void onBindViewHolder(MovieAdapterViewHolder holder, int position) {
-        String poster_url = "http://image.tmdb.org/t/p/w185/" + mMoviesData[position].getPosterPath();
+        String poster_url = NetworkUtils.getPosterImageUrl() + mMoviesData[position].getPosterPath();
         Picasso.with(context).load(poster_url).into(holder.moviePoster);
     }
 
@@ -64,10 +68,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieAdapter
         }
     }
 
-
-    public void setMoviesData(MovieObject[] weatherData) {
-        mMoviesData = weatherData;
+    public void setMoviesData(MovieObject[] moviesData) {
+        mMoviesData = moviesData;
         notifyDataSetChanged();
     }
-
 }

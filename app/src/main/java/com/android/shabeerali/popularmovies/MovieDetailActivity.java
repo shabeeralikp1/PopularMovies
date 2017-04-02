@@ -21,6 +21,7 @@ import com.android.shabeerali.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
+import java.util.Locale;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -42,9 +43,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
 
         moviePoster = (ImageView) findViewById(R.id.iv_detail_view);
-         movieName = (TextView) findViewById(R.id.tv_movie_name);
-         movieOverview = (TextView) findViewById(R.id.tv_movie_overview);
-         movieDateRating = (TextView) findViewById(R.id.tv_movie_date_rating);
+        movieName = (TextView) findViewById(R.id.tv_movie_name);
+        movieOverview = (TextView) findViewById(R.id.tv_movie_overview);
+        movieDateRating = (TextView) findViewById(R.id.tv_movie_date_rating);
         mMovieDetailView = (ScrollView) findViewById(R.id.sv_movie_details);
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_mv_detail_error_message_display);
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_mv_detail_loading_indicator);
@@ -60,6 +61,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        NetworkUtils.setResponselanguage(Locale.getDefault().toString());
 
         Intent intentThatStartedThisActivity = getIntent();
 
@@ -80,14 +83,25 @@ public class MovieDetailActivity extends AppCompatActivity {
         mErrorLayout.setVisibility(View.INVISIBLE);
         mMovieDetailView.setVisibility(View.VISIBLE);
 
-        String poster_url = NetworkUtils.MOVIE_POSTER_URL  + moviesData.getBackdropPath();
+        String poster_url = NetworkUtils.getPosterImageUrl()  + moviesData.getBackdropPath();
         Picasso.with(this).load(poster_url).into(moviePoster);
 
         movieName.setText(moviesData.getTitle());
         movieOverview.setText(moviesData.getOverview());
 
         String year = moviesData.getReleaseDate().split("-", 3)[0];
-        movieDateRating.setText(year + " | " + moviesData.getRating());
+        String displayText = "";
+        displayText = year;
+        Double rating = moviesData.getRating();
+        if(rating != 0) {
+            if(!year.equals("")) {
+                displayText = displayText + " | " + rating;
+            } else {
+                displayText = rating.toString();
+            }
+        }
+
+        movieDateRating.setText(displayText);
     }
 
     private void showErrorMessage(String message) {

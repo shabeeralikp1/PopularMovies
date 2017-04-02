@@ -13,33 +13,33 @@
             <LinearLayout
                 android:id="@+id/filter"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="100dp"
                 android:orientation="horizontal"
                 android:visibility="visible">
 
                 <RadioGroup
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="100dp"
                     android:clickable="true"
                     android:orientation="horizontal"
                     android:gravity="center_horizontal"
                     android:id="@+id/rg_filter"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="24dp">
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/movies_most_popular"
                         android:id="@+id/rb_most_popular"
-                        android:textSize="18sp"/>
+                        android:textSize="30sp"/>
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/movies_top_rated"
                         android:id="@+id/rb_top_rated"
-                        android:textSize="18sp"
-                        android:layout_marginLeft="8dp"/>
+                        android:textSize="30sp"
+                        android:layout_marginLeft="12dp"/>
 
                 </RadioGroup>
             </LinearLayout>
@@ -64,7 +64,7 @@
                     android:layout_height="match_parent"
                     android:padding="16dp"
                     android:text="@string/error_message"
-                    android:textSize="20sp"
+                    android:textSize="30sp"
                     android:gravity="center"
                     android:layout_centerInParent="true"/>
 
@@ -75,14 +75,14 @@
                     android:text="@string/try_again"
                     android:gravity="center"
                     android:layout_centerInParent="true"
-                    android:textSize="16sp"/>
+                    android:textSize="30sp"/>
 
             </LinearLayout>
 
             <ProgressBar
                 android:id="@+id/pb_loading_indicator"
-                android:layout_height="42dp"
-                android:layout_width="42dp"
+                android:layout_height="60dp"
+                android:layout_width="60dp"
                 android:layout_centerInParent="true"
                 android:visibility="invisible" />
         </RelativeLayout>

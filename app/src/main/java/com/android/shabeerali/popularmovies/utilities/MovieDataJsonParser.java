@@ -8,7 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
+/*
+ *  Utility Class for  parsing the JSON adat from moviedb server
+ */
 public class MovieDataJsonParser {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
@@ -43,7 +45,7 @@ public class MovieDataJsonParser {
 
     public static final String POPULARITY = "popularity";
 
-    public static final String VIOTE_COUNT = "vote_count";
+    public static final String VOTE_COUNT = "vote_count";
 
     public static final String VIDEO = "video";
 

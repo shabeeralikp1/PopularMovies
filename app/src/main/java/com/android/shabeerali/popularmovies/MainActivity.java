@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -24,6 +23,7 @@ import com.android.shabeerali.popularmovies.utilities.MovieDataJsonParser;
 import com.android.shabeerali.popularmovies.utilities.NetworkUtils;
 
 import java.net.URL;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
@@ -38,10 +38,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private LinearLayout mErrorLayout;
     private Button mTryAgainButton;
     private GridLayoutManager lLayout;
-
-    private static final int ORIENTATION_0 = 0;
-    private static final int ORIENTATION_90 = 3;
-    private static final int ORIENTATION_270 = 1;
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
@@ -68,15 +64,19 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         });
 
         Configuration config = this.getResources().getConfiguration();
-        Log.e("SHABEER", "S: " +config.smallestScreenWidthDp);
-        if (config.smallestScreenWidthDp >= 720) {
-            lLayout = new GridLayoutManager(MainActivity.this, 4);
-        } else  if (config.smallestScreenWidthDp >= 600) {
-            lLayout = new GridLayoutManager(MainActivity.this,3);
-        }else {
-            lLayout = new GridLayoutManager(MainActivity.this, 2);
-        }
 
+        NetworkUtils.setResponselanguage(Locale.getDefault().toString());
+
+        if (config.smallestScreenWidthDp >= 720) {
+            lLayout = new GridLayoutManager(MainActivity.this, 3);
+            NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W780);
+        } else  if (config.smallestScreenWidthDp >= 600) {
+            lLayout = new GridLayoutManager(MainActivity.this,2);
+            NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W500);
+        } else {
+            lLayout = new GridLayoutManager(MainActivity.this, 2);
+            NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W185);
+        }
 
         mRecyclerView = (RecyclerView)findViewById(R.id.rv_movie_posters);
         mRecyclerView.setHasFixedSize(true);
@@ -88,8 +88,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                mRecyclerView.setAdapter(null);
-                mRecyclerView.setAdapter(mMoviewAdapter);
+                mMoviewAdapter.setMoviesData(null);
                 loadMoviesData(group.getCheckedRadioButtonId());
             }
         });
@@ -157,7 +156,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             }
 
             String fetch_filter = params[0];
-            //URL moviesRequestUrl = NetworkUtils.buildUrl(fetch_filter);
             int requestId = fetch_filter.equals("top_rated")? NetworkUtils.GET_TOP_RATED_MOVIES : NetworkUtils.GET_POPULAR_MOVIES;
             URL moviesRequestUrl = NetworkUtils.getMovieRequestsUrl(requestId, "");
 

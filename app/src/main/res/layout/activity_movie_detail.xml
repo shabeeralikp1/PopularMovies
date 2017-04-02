@@ -74,8 +74,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/bt_mv_detail_try_again"
-            android:text="Try Again"
+            android:text="@string/try_again"
             android:layout_gravity="center"
+            android:textSize="16sp"
             />
     </LinearLayout>
 
