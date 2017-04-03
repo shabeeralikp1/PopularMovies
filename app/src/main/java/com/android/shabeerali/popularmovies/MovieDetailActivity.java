@@ -86,7 +86,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         String poster_url = NetworkUtils.getPosterImageUrl()  + moviesData.getPosterPath();
         Picasso.with(this).load(poster_url).into(moviePoster);
 
-        movieName.setText(moviesData.getOriginalTitle());
+        movieName.setText(moviesData.getTitle());
         movieOverview.setText(moviesData.getOverview());
 
         String year = moviesData.getReleaseDate().split("-", 3)[0];
