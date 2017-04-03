@@ -41,4 +41,4 @@ project.properties
 ##Gradle-based build
 .gradle
 build/
-tmdb_api_key.xml
+app/src/main/res/values/tmdb_api_key.xml
