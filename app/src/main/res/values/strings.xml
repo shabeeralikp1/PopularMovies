@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Popular Movies</string>
+    <string name="error_message">An error has occurred. Please try again</string>
+    <string name="no_internet_connection">Internet connection not available.Please try agian</string>
+    <string name="movies_most_popular">Most Popular</string>
+    <string name="movies_top_rated">Top Rated</string>
+    <string name="try_again">Try Again</string>
+    
+    <string name="TMDb_Notice">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
+
+</resources>
