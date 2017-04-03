@@ -125,6 +125,7 @@ public class MovieDataJsonParser {
         String release_date = movieInfoJson.getString(RELEASE_DATE);
         Double rating = movieInfoJson.getDouble(VOTE_AVERAGE);
         String backdrop_path = movieInfoJson.getString(BACKDROP_PATH);
+        String original_title = movieInfoJson.getString(ORIGINAL_TITLE);
 
         parsedMoviesData.setTitle(title);
         parsedMoviesData.setOverview(overview);
@@ -132,6 +133,7 @@ public class MovieDataJsonParser {
         parsedMoviesData.setReleaseDate(release_date);
         parsedMoviesData.setRating(rating);
         parsedMoviesData.setBackdropPath(backdrop_path);
+        parsedMoviesData.setOriginalTitle(original_title);
 
         return parsedMoviesData;
     }

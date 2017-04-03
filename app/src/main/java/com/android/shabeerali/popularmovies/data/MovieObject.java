@@ -12,6 +12,7 @@ public class MovieObject {
     private String overview;
     private double rating;
     private String release_date;
+    private String original_title;
 
     public MovieObject() {
         this.title = "";
@@ -21,6 +22,7 @@ public class MovieObject {
         this.overview = "";
         this.release_date = "";
         this.rating = 0;
+        this.original_title = "";
     }
 
     public String getTitle() {
@@ -29,6 +31,14 @@ public class MovieObject {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getOriginalTitle() {
+        return original_title;
+    }
+
+    public void setOriginalTitle(String original_title) {
+        this.original_title = original_title;
     }
 
     public int getId() {
