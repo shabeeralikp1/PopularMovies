@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -69,13 +72,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         if (config.smallestScreenWidthDp >= 720) {
             lLayout = new GridLayoutManager(MainActivity.this, 3);
-            NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W780);
+            //NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W780);
         } else  if (config.smallestScreenWidthDp >= 600) {
             lLayout = new GridLayoutManager(MainActivity.this,2);
-            NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W500);
+           // NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W500);
         } else {
             lLayout = new GridLayoutManager(MainActivity.this, 2);
-            NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W185);
+           // NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W185);
         }
 
         mRecyclerView = (RecyclerView)findViewById(R.id.rv_movie_posters);
@@ -215,5 +218,26 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     protected void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.about) {
+            Context context = this;
+            Class destinationClass = AboutActivity.class;
+            Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+            startActivity(intentToStartDetailActivity);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

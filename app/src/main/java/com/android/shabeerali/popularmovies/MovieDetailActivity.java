@@ -83,7 +83,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         mErrorLayout.setVisibility(View.INVISIBLE);
         mMovieDetailView.setVisibility(View.VISIBLE);
 
-        String poster_url = NetworkUtils.getPosterImageUrl()  + moviesData.getBackdropPath();
+        String poster_url = NetworkUtils.getPosterImageUrl()  + moviesData.getPosterPath();
         Picasso.with(this).load(poster_url).into(moviePoster);
 
         movieName.setText(moviesData.getTitle());
@@ -95,7 +95,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         Double rating = moviesData.getRating();
         if(rating != 0) {
             if(!year.equals("")) {
-                displayText = displayText + " | " + rating;
+                displayText = displayText + "  |  " + rating;
             } else {
                 displayText = rating.toString();
             }

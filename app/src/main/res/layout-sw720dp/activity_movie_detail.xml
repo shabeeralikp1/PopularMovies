@@ -11,49 +11,55 @@
         android:id="@+id/sv_movie_details"
         android:visibility="invisible"
         android:background="@android:color/background_dark">
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/iv_detail_view"
-                android:layout_width="550dp"
-                android:layout_height="550dp"
+                android:layout_marginTop="16dp"
+                android:layout_width="300dp"
+                android:layout_height="450dp"
                 android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
-                android:layout_gravity="center_horizontal"/>
+                android:layout_gravity="left"
+                android:layout_marginLeft="8dp"/>
 
             <TextView
                 android:id="@+id/tv_movie_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/iv_detail_view"
-                android:fontFamily="monospace"
+                android:layout_toRightOf="@id/iv_detail_view"
                 android:textSize="50dp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white"
-                android:layout_marginTop="24dp"/>
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="8dp"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="16dp"/>
 
             <TextView
                 android:id="@+id/tv_movie_date_rating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_movie_name"
+                android:layout_toRightOf="@id/iv_detail_view"
                 android:textColor="@android:color/white"
-                android:fontFamily="monospace"
+                android:layout_marginLeft="16dp"
                 android:textSize="30dp"/>
 
             <TextView
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="30dp"
                 android:id="@+id/tv_movie_overview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_movie_date_rating"
+                android:layout_below="@id/iv_detail_view"
                 android:textColor="@android:color/white"
-                android:fontFamily="monospace"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:textSize="30dp"/>
-        </LinearLayout>
+        </RelativeLayout>
     </ScrollView>
 
     <LinearLayout
@@ -79,6 +85,7 @@
             android:id="@+id/bt_mv_detail_try_again"
             android:text="@string/try_again"
             android:layout_gravity="center"
+            android:textSize="16sp"
             />
     </LinearLayout>
 
