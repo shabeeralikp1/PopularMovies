@@ -5,7 +5,10 @@
     <string name="movies_most_popular">Most Popular</string>
     <string name="movies_top_rated">Top Rated</string>
     <string name="try_again">Try Again</string>
-    
+
+    <!-- - - - - - - - - - - - - -->
+    <!-- Attribution text for using TMDb APIs -->
+    <!-- - - - - - - - - - - - - -->
     <string name="TMDb_Notice">This product uses the TMDb API but is not endorsed or certified by TMDb.</string>
 
 </resources>
