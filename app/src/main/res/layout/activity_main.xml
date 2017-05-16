@@ -13,13 +13,13 @@
             <LinearLayout
                 android:id="@+id/filter"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="visible">
 
                 <RadioGroup
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     android:clickable="true"
                     android:orientation="horizontal"
                     android:gravity="center_horizontal"
@@ -31,7 +31,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/movies_most_popular"
                         android:id="@+id/rb_most_popular"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp"
+                        android:layout_weight="1"/>
 
                     <RadioButton
                         android:layout_width="wrap_content"
@@ -39,7 +40,18 @@
                         android:text="@string/movies_top_rated"
                         android:id="@+id/rb_top_rated"
                         android:textSize="18sp"
-                        android:layout_marginLeft="8dp"/>
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"
+                        />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="my favorites"
+                        android:id="@+id/rb_my_fav"
+                        android:textSize="18sp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_weight="1"/>
 
                 </RadioGroup>
             </LinearLayout>

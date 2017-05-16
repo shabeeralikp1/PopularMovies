@@ -40,14 +40,28 @@
                 android:layout_marginTop="16dp"/>
 
             <TextView
-                android:id="@+id/tv_movie_date_rating"
-                android:layout_width="match_parent"
+            android:id="@+id/tv_movie_date_rating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_movie_name"
+            android:layout_toRightOf="@id/iv_detail_view"
+            android:textColor="@android:color/white"
+            android:layout_marginLeft="16dp"
+            android:textSize="16dp"/>
+
+
+            <CheckBox
+                android:button="@android:drawable/btn_star"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_movie_name"
+                android:id="@+id/bt_movie_favorite"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"
+                android:layout_below="@id/tv_movie_date_rating"
                 android:layout_toRightOf="@id/iv_detail_view"
-                android:textColor="@android:color/white"
                 android:layout_marginLeft="16dp"
-                android:textSize="16dp"/>
+                android:layout_marginTop="32dp"
+                android:onClick="handleFavourite"/>
 
             <TextView
                 android:layout_marginTop="30dp"

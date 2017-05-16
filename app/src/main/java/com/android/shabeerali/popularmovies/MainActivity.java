@@ -3,6 +3,8 @@ package com.android.shabeerali.popularmovies;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,12 +24,16 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.android.shabeerali.popularmovies.data.FavoriteMovieContract;
+import com.android.shabeerali.popularmovies.data.FavoriteMovieDbHelper;
 import com.android.shabeerali.popularmovies.data.MovieObject;
 import com.android.shabeerali.popularmovies.utilities.MovieDataJsonParser;
 import com.android.shabeerali.popularmovies.utilities.NetworkUtils;
 
 import java.net.URL;
 import java.util.Locale;
+
+import static com.android.shabeerali.popularmovies.data.FavoriteMovieContract.FavoriteMovieEntry.TABLE_NAME;
 
 public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
 
@@ -42,11 +49,16 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     private Button mTryAgainButton;
     private GridLayoutManager lLayout;
 
+    private SQLiteDatabase mDb;
+
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Log.d("SHABEER", "onCreate ");
+
         setContentView(R.layout.activity_main);
 
         NetworkUtils.setApiKey(this.getResources().getString(R.string.api_key));
@@ -96,14 +108,22 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
             }
         });
 
+        // Create a DB helper (this will create the DB if run for the first time)
+        FavoriteMovieDbHelper dbHelper = new FavoriteMovieDbHelper(this);
+
+        mDb = dbHelper.getReadableDatabase();
+
+
+
+
         mCheckedRadioId = -1;
         if( savedInstanceState != null) {
             mCheckedRadioId = savedInstanceState.getInt("checkedRadioId");
             RadioButton checkedButton = (RadioButton) mRadioGroup.findViewById(mCheckedRadioId);
             checkedButton.setChecked(true);
-        } else {
+        } /*else {
             mRbMostPopular.setChecked(true);
-        }
+        }*/
     }
     void loadMoviesData(int checkedRadioId) {
         String filter = "popular";
@@ -113,14 +133,52 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 break;
             case R.id.rb_top_rated:
                 filter = "top_rated";
+                break;
+            case R.id.rb_my_fav:
+                filter = "my_favourite";
+                break;
         }
 
         if(isOnline()) {
             showMovieDataView();
-            new FetchMovieCollectionsTask().execute(filter);
+            if( filter != "my_favourite") {
+                new FetchMovieCollectionsTask().execute(filter);
+            } else {
+                showFavoriteMovies();
+            }
         } else {
             showErrorMessage(this.getResources().getString(R.string.no_internet_connection));
         }
+    }
+
+    private void showFavoriteMovies() {
+        Cursor cursor = getAllFavorites();
+
+        MovieObject[] movieObjects;
+
+        int element_count = cursor.getCount();
+
+        if(element_count != 0) {
+
+            movieObjects = new MovieObject[element_count];
+
+            int index = 0;
+            while (cursor.moveToNext()) {
+
+                    String name = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_NAME));
+                    String poster = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_POSTERPATH));
+                    int id = cursor.getInt(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID));
+                    movieObjects[index] = new MovieObject();
+                    movieObjects[index].setPosterPath(poster);
+                    movieObjects[index].setId(id);
+                    index++;
+            }
+
+            showMovieDataView();
+            mMoviewAdapter.setMoviesData(movieObjects);
+        }
+
+
     }
 
     private void showMovieDataView() {
@@ -218,6 +276,13 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     protected void onResume() {
         super.onResume();
+        int checkedId = mRadioGroup.getCheckedRadioButtonId();
+        if(checkedId == -1) {
+            mRbMostPopular.setChecked(true);
+        } else {
+            mMoviewAdapter.setMoviesData(null);
+            loadMoviesData(mRadioGroup.getCheckedRadioButtonId());
+        }
     }
 
     @Override
@@ -240,4 +305,18 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+    private Cursor getAllFavorites() {
+        return mDb.query(
+                TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID
+        );
+    }
+
 }

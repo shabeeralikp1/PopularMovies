@@ -1,7 +1,10 @@
 package com.android.shabeerali.popularmovies;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -9,12 +12,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.shabeerali.popularmovies.data.FavoriteMovieContract;
+import com.android.shabeerali.popularmovies.data.FavoriteMovieDbHelper;
 import com.android.shabeerali.popularmovies.data.MovieObject;
 import com.android.shabeerali.popularmovies.utilities.MovieDataJsonParser;
 import com.android.shabeerali.popularmovies.utilities.NetworkUtils;
@@ -22,6 +29,8 @@ import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 import java.util.Locale;
+
+import static com.android.shabeerali.popularmovies.data.FavoriteMovieContract.FavoriteMovieEntry.TABLE_NAME;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -35,6 +44,12 @@ public class MovieDetailActivity extends AppCompatActivity {
     TextView movieOverview;
     TextView movieDateRating;
     int movie_id;
+    String movie_name;
+    String movie_poster_path;
+    private CheckBox mFavoriteMovie;
+
+    private SQLiteDatabase mDb;
+
 
 
     @Override
@@ -62,9 +77,17 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
+        mFavoriteMovie = (CheckBox) findViewById(R.id.bt_movie_favorite);
         NetworkUtils.setResponselanguage(Locale.getDefault().toString());
 
         Intent intentThatStartedThisActivity = getIntent();
+
+        // Create a DB helper (this will create the DB if run for the first time)
+        FavoriteMovieDbHelper dbHelper = new FavoriteMovieDbHelper(this);
+
+        // Keep a reference to the mDb until paused or killed. Get a writable database
+        // because you will be adding restaurant customers
+        mDb = dbHelper.getWritableDatabase();
 
         if (intentThatStartedThisActivity != null) {
 
@@ -76,6 +99,7 @@ public class MovieDetailActivity extends AppCompatActivity {
                 showErrorMessage(MovieDetailActivity.this.getResources().getString(R.string.no_internet_connection));
             }
         }
+
     }
 
 
@@ -86,7 +110,10 @@ public class MovieDetailActivity extends AppCompatActivity {
         String poster_url = NetworkUtils.getPosterImageUrl()  + moviesData.getPosterPath();
         Picasso.with(this).load(poster_url).into(moviePoster);
 
-        movieName.setText(moviesData.getTitle());
+        movie_name = moviesData.getTitle();
+        movie_poster_path = moviesData.getPosterPath();
+
+        movieName.setText(movie_name);
         movieOverview.setText(moviesData.getOverview());
 
         String year = moviesData.getReleaseDate().split("-", 3)[0];
@@ -102,6 +129,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         movieDateRating.setText(displayText);
+
+
+        if(IsMovieInFavorites(movie_id)) {
+            mFavoriteMovie.setChecked(true);
+        } else {
+            mFavoriteMovie.setChecked(false);
+        }
+
     }
 
     private void showErrorMessage(String message) {
@@ -158,6 +193,60 @@ public class MovieDetailActivity extends AppCompatActivity {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
+    public void  handleFavourite(View view) {
+
+        if(mFavoriteMovie.isChecked()) {
+            addFavorite(movie_id, movie_name, movie_poster_path);
+            Toast.makeText(this, "Added to favorites",Toast.LENGTH_SHORT).show();
+        } else {
+            removeFavorite(movie_id);
+            Toast.makeText(this, "Removed from favorites",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private long addFavorite(int movieId, String movieName, String posterPath) {
+        ContentValues cv = new ContentValues();
+        cv.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID, movieId);
+        cv.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_NAME, movieName);
+        cv.put(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_POSTERPATH, posterPath);
+        return mDb.insert(TABLE_NAME, null, cv);
+    }
+
+
+    private boolean removeFavorite(int id) {
+        return mDb.delete(FavoriteMovieContract.FavoriteMovieEntry.TABLE_NAME, FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID + "=" + id, null) > 0;
+    }
+
+
+    private Cursor getAllFavorites() {
+        return mDb.query(
+                TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID
+        );
+    }
+
+    private boolean IsMovieInFavorites(int movie_id) {
+
+        String[] columns = { FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID };
+        String selection = FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID + " =?";
+        String[] selectionArgs = {Integer.toString(movie_id)};
+        String limit = "1";
+
+        Cursor cursor = mDb.query(TABLE_NAME, columns, selection, selectionArgs, null, null, null, limit);
+        boolean exists = (cursor.getCount() > 0);
+        cursor.close();
+        return exists;
+
+    }
+
+
 }
 
 
