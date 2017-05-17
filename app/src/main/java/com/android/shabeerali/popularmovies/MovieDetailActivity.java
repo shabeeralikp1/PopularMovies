@@ -10,11 +10,14 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -28,6 +31,7 @@ import com.android.shabeerali.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.android.shabeerali.popularmovies.data.FavoriteMovieContract.FavoriteMovieEntry.TABLE_NAME;
@@ -47,8 +51,23 @@ public class MovieDetailActivity extends AppCompatActivity {
     String movie_name;
     String movie_poster_path;
     private CheckBox mFavoriteMovie;
+    private String[]  mTrailerKeys;
+    private String[]  mReviews;
 
     private SQLiteDatabase mDb;
+
+    private LinearLayout mTrailerLayout;
+    private LinearLayout mReviewsLayout;
+
+    private ListView mTrailerList;
+    private ListView mReviewsList;
+
+    private ArrayAdapter<String> trailerAdapter;
+    private ArrayList<String> trailerArrayList;
+
+    private ArrayAdapter<String> reviewsAdapter;
+    private ArrayList<String> reviewsArrayList;
+
 
 
 
@@ -76,6 +95,25 @@ public class MovieDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mTrailerLayout = (LinearLayout) findViewById(R.id.ll_trailer_view);
+        mReviewsLayout = (LinearLayout) findViewById(R.id.ll_review_view);
+        mTrailerList = (ListView) findViewById(R.id.lv_trailer_list);
+        mReviewsList = (ListView) findViewById(R.id.lv_review_list);
+
+        trailerArrayList = new ArrayList<String>();
+        trailerAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.reviews_list, trailerArrayList);
+
+        // Here, you set the data in your ListView
+        mTrailerList.setAdapter(trailerAdapter);
+
+
+        reviewsArrayList = new ArrayList<String>();
+        reviewsAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.reviews_list, reviewsArrayList);
+
+        // Here, you set the data in your ListView
+        mReviewsList.setAdapter(reviewsAdapter);
+
 
         mFavoriteMovie = (CheckBox) findViewById(R.id.bt_movie_favorite);
         NetworkUtils.setResponselanguage(Locale.getDefault().toString());
@@ -136,6 +174,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         } else {
             mFavoriteMovie.setChecked(false);
         }
+
+        checkForTrailers();
 
     }
 
@@ -246,6 +286,121 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     }
 
+    private void checkForTrailers() {
+        new FetchMovieTrailersTask().execute(Integer.toString(movie_id));
+
+    }
+
+    private void checkForReviews() {
+        new FetchMovieReviewsTask().execute(Integer.toString(movie_id));
+
+    }
+
+    private void showTrailerInfo(String[] trailerKeys) {
+        Log.d("SHABEER  ", "Trailers");
+        for(String key :trailerKeys) {
+            Log.d("SHABEER  ", "" + key);
+        }
+
+        mTrailerKeys = trailerKeys.clone();
+        checkForReviews();
+    }
+
+    private void showReviewInfo(String[] reviews) {
+        mReviewsLayout.setVisibility(View.VISIBLE);
+        Log.d("SHABEER  ", "reviews");
+        for(String key :reviews) {
+            Log.d("SHABEER  ", "" + key);
+            reviewsArrayList.add(key);
+        }
+
+        reviewsAdapter.notifyDataSetChanged();
+
+        mReviews = reviews.clone();
+
+    }
+
+    public class FetchMovieTrailersTask extends AsyncTask<String, Void, String[]> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String[] doInBackground(String... params) {
+
+            if (params.equals("-1") ) {
+                return null;
+            }
+
+            String movie_id = params[0];
+            //URL moviesRequestUrl = NetworkUtils.buildUrl(fetch_filter);
+            URL trailerRequestUrl = NetworkUtils.getMovieRequestsUrl(NetworkUtils.GET_TRAILER_DETAILS, movie_id);
+
+            try {
+                String jsonMovieInfoResponse = NetworkUtils
+                        .getResponseFromHttpUrl(trailerRequestUrl);
+
+                Log.e("SHABEER", "" + jsonMovieInfoResponse);
+
+                String[] trailerKeys = MovieDataJsonParser
+                        .parseTrailerInformation(jsonMovieInfoResponse);
+
+                Log.e("SHABEER", "" + trailerKeys);
+                return trailerKeys;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String[] trailerKeys) {
+            showTrailerInfo(trailerKeys);
+        }
+    }
+
+    public class FetchMovieReviewsTask extends AsyncTask<String, Void, String[]> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String[] doInBackground(String... params) {
+
+            if (params.equals("-1") ) {
+                return null;
+            }
+
+            String movie_id = params[0];
+            //URL moviesRequestUrl = NetworkUtils.buildUrl(fetch_filter);
+            URL trailerRequestUrl = NetworkUtils.getMovieRequestsUrl(NetworkUtils.GET_REVIEW_DETAILS, movie_id);
+
+            try {
+                String jsonMovieInfoResponse = NetworkUtils
+                        .getResponseFromHttpUrl(trailerRequestUrl);
+
+                Log.e("SHABEER", "" + jsonMovieInfoResponse);
+
+                String[] reviews = MovieDataJsonParser
+                        .parseReviewInformation(jsonMovieInfoResponse);
+                Log.e("SHABEER", "" + reviews);
+                return reviews;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(String[] reviews) {
+            //mLoadingIndicator.setVisibility(View.INVISIBLE);
+                showReviewInfo(reviews);
+        }
+    }
 
 }
 

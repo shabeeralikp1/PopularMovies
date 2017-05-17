@@ -62,6 +62,18 @@ public class NetworkUtils {
      */
     public final static int  GET_MOVIE_DETAILS = 2;
 
+    /*
+     * Request ID for getting trailer details
+     */
+    public final static int  GET_TRAILER_DETAILS = 3;
+
+    /*
+     * Request ID for getting review details
+     */
+    public final static int  GET_REVIEW_DETAILS = 4;
+
+
+
 
     private static  String poster_image_base_url = "http://image.tmdb.org/t/p/" ;
 
@@ -169,6 +181,18 @@ public class NetworkUtils {
             case GET_MOVIE_DETAILS:
                 builder = Uri.parse(MOVIE_DB_URL).buildUpon()
                         .appendPath(movie_id);
+                break;
+
+            case GET_TRAILER_DETAILS:
+                builder = Uri.parse(MOVIE_DB_URL).buildUpon()
+                        .appendPath(movie_id)
+                        .appendPath("videos");
+                break;
+
+            case GET_REVIEW_DETAILS:
+                builder = Uri.parse(MOVIE_DB_URL).buildUpon()
+                        .appendPath(movie_id)
+                        .appendPath("reviews");
                 break;
             default:
                 Log.e(TAG, "API request not Implemented");

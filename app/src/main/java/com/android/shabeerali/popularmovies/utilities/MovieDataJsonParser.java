@@ -55,6 +55,18 @@ public class MovieDataJsonParser {
 
     public static final String STATUS_MESSAGE = "status_message";
 
+    public static final String TYPE = "type";
+
+    public static final String TRAILER =  "Trailer";
+
+    public static final String TRAILER_KEY =  "key";
+
+    public static final String REVIEW_TOTAL_RESULTS =  "total_results";
+
+    public static final String REVIEW_AUTHOR =  "author";
+
+    public static final String REVIEW_CONTENT=  "content";
+
 
     /**
      * Parse the JSON response for movie collections request
@@ -136,5 +148,91 @@ public class MovieDataJsonParser {
         parsedMoviesData.setOriginalTitle(original_title);
 
         return parsedMoviesData;
+    }
+
+
+    /**
+     * Parse the JSON response for trailer request
+     *
+     * @param trailerInfoJsonStr  JSON response from the server
+     * @return String array  with trailer keys for Youtube
+     */
+    public static String[] parseTrailerInformation(String trailerInfoJsonStr)
+            throws JSONException {
+
+        /* String[] to hold trailer key information */
+        String[] trailersData = null;
+
+        int trailerIndex = 0;
+
+        JSONObject trailerInfoJson = new JSONObject(trailerInfoJsonStr);
+
+        /* Is there an error? */
+        if (trailerInfoJson.has(STATUS_CODE)) {
+            int errorCode = trailerInfoJson.getInt(STATUS_CODE);
+            String error_message = trailerInfoJson.getString(STATUS_MESSAGE);
+
+            Log.e(TAG, "API request returned error: " + errorCode + " ," + error_message);
+            return null;
+        }
+
+        JSONArray trailerArray = trailerInfoJson.getJSONArray(RESULTS);
+
+
+        trailersData = new String[trailerArray.length()];
+
+        for (int i = 0; i < trailerArray.length(); i++) {
+            JSONObject trailerInfo = trailerArray.getJSONObject(i);
+            String type = trailerInfo.getString(TYPE);
+            if(type.equals(TRAILER)) {
+                trailersData[trailerIndex] = trailerInfo.getString(TRAILER_KEY);
+                trailerIndex++;
+            }
+        }
+
+        if(trailerIndex == 0) {
+            trailersData = null;
+        }
+
+        return trailersData;
+
+    }
+
+
+    /**
+     * Parse the JSON response for movie reviews request
+     *
+     * @param reviewsInfoJsonStr  JSON response from the server
+     * @return String array  with review contents
+     */
+    public static String[] parseReviewInformation(String reviewsInfoJsonStr)
+            throws JSONException {
+
+           /* String[] to hold trailer key information */
+        String[] reviewsData = null;
+
+        int reviewIndex = 0;
+
+        JSONObject reviewsInfoJson = new JSONObject(reviewsInfoJsonStr);
+
+        /* Is there an error? */
+        if (reviewsInfoJson.has(STATUS_CODE)) {
+            int errorCode = reviewsInfoJson.getInt(STATUS_CODE);
+            String error_message = reviewsInfoJson.getString(STATUS_MESSAGE);
+
+            Log.e(TAG, "API request returned error: " + errorCode + " ," + error_message);
+            return null;
+        }
+
+        JSONArray reviewsArray = reviewsInfoJson.getJSONArray(RESULTS);
+
+        reviewsData = new String[reviewsArray.length()];
+
+        for (int i = 0; i < reviewsArray.length(); i++) {
+            JSONObject trailerInfo = reviewsArray.getJSONObject(i);
+            reviewsData[i] = trailerInfo.getString(REVIEW_CONTENT);
+        }
+
+        return reviewsData;
     }
 }
