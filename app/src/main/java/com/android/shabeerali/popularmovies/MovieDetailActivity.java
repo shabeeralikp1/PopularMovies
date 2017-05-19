@@ -12,11 +12,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -297,26 +299,44 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     private void showTrailerInfo(String[] trailerKeys) {
-        Log.d("SHABEER  ", "Trailers");
-        for(String key :trailerKeys) {
-            Log.d("SHABEER  ", "" + key);
-        }
 
-        mTrailerKeys = trailerKeys.clone();
+        if(trailerKeys.length != 0) {
+            Log.d("SHABEER  ", "Trailers");
+            int index = 0;
+            for (String key : trailerKeys) {
+                if(index == 2)
+                    break;
+                index++;
+                String entry = "Trailer " + index;
+                Log.d("SHABEER  ", "" + key);
+                trailerArrayList.add(entry);
+            }
+
+            mTrailerKeys = trailerKeys.clone();
+            setListViewHeightBasedOnChildren(mTrailerList);
+            mTrailerLayout.setVisibility(View.VISIBLE);
+            trailerAdapter.notifyDataSetChanged();
+        }
         checkForReviews();
     }
 
     private void showReviewInfo(String[] reviews) {
-        mReviewsLayout.setVisibility(View.VISIBLE);
-        Log.d("SHABEER  ", "reviews");
-        for(String key :reviews) {
-            Log.d("SHABEER  ", "" + key);
-            reviewsArrayList.add(key);
+
+        if(reviews.length != 0) {
+            Log.d("SHABEER  ", "reviews");
+            for(String key :reviews) {
+                Log.d("SHABEER  ", "" + key);
+                reviewsArrayList.add(key);
+            }
+
+            Log.d("SHABEER  ", "" + reviewsArrayList);
+            //setListViewHeightBasedOnChildren(mReviewsList);
+            mReviewsLayout.setVisibility(View.VISIBLE);
+            reviewsAdapter.notifyDataSetChanged();
+
+            mReviews = reviews.clone();
         }
 
-        reviewsAdapter.notifyDataSetChanged();
-
-        mReviews = reviews.clone();
 
     }
 
@@ -400,6 +420,27 @@ public class MovieDetailActivity extends AppCompatActivity {
             //mLoadingIndicator.setVisibility(View.INVISIBLE);
                 showReviewInfo(reviews);
         }
+    }
+
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
     }
 
 }

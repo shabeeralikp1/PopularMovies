@@ -15,29 +15,29 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@android:color/holo_blue_dark"
+                android:textSize="24dp"
+                android:textColor="@android:color/white"
+                android:padding="16dp"
+                android:id="@+id/tv_movie_name"
+                android:textStyle="bold"
+                android:gravity="center_vertical"
+                />
 
             <ImageView
                 android:id="@+id/iv_detail_view"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="0dp"
                 android:layout_width="150dp"
                 android:layout_height="225dp"
-                android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
                 android:layout_gravity="left"
-                android:layout_marginLeft="8dp"/>
+                android:layout_marginLeft="0dp"
+                android:layout_below="@+id/tv_movie_name"
+                />
 
-            <TextView
-                android:id="@+id/tv_movie_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/iv_detail_view"
-                android:textSize="30dp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="8dp"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="16dp"/>
 
             <TextView
             android:id="@+id/tv_movie_date_rating"
@@ -47,7 +47,8 @@
             android:layout_toRightOf="@id/iv_detail_view"
             android:textColor="@android:color/white"
             android:layout_marginLeft="16dp"
-            android:textSize="16dp"/>
+            android:textSize="16dp"
+            android:layout_marginTop="80dp"/>
 
 
             <CheckBox
@@ -84,9 +85,19 @@
                 android:orientation="vertical">
 
                 <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/white"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/white"
+                android:layout_margin="8dp"
+                />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="Trailers"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:textColor="@android:color/white"
                     />
 
                 <ListView
@@ -104,19 +115,35 @@
                 android:id="@+id/ll_review_view"
                 android:layout_below="@id/ll_trailer_view"
                 android:visibility="gone"
-                android:layout_margin="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="vertical">
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@android:color/white"
+                    android:layout_margin="8dp"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:text="Reviews"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:textColor="@android:color/white"
                     />
 
                 <ListView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/lv_review_list">
+                    android:id="@+id/lv_review_list"
+                    android:layout_margin="12dp"
+                    android:divider="#FFFFFF"
+                    >
 
                 </ListView>
 
