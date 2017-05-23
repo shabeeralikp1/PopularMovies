@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:id="@+id/sv_movie_details"
         android:visibility="invisible"
-        android:background="@android:color/background_dark">
+        android:background="@android:color/background_light">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -20,7 +20,7 @@
                 android:layout_height="100dp"
                 android:background="@android:color/holo_blue_dark"
                 android:textSize="24dp"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:padding="16dp"
                 android:id="@+id/tv_movie_name"
                 android:textStyle="bold"
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_movie_name"
             android:layout_toRightOf="@id/iv_detail_view"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:layout_marginLeft="16dp"
             android:textSize="16dp"
             android:layout_marginTop="80dp"/>
@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/iv_detail_view"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:textSize="16dp"/>
@@ -87,7 +87,7 @@
                 <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/white"
+                android:background="@android:color/black"
                 android:layout_margin="8dp"
                 />
                 <TextView
@@ -97,13 +97,17 @@
                     android:text="Trailers"
                     android:textStyle="bold"
                     android:textSize="16dp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     />
 
                 <ListView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/lv_trailer_list">
+                    android:id="@+id/lv_trailer_list"
+                    android:layout_margin="16dp"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="10.0sp"
+                    >
 
                 </ListView>
 
@@ -124,7 +128,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@android:color/white"
+                    android:background="@android:color/black"
                     android:layout_margin="8dp"
                     />
                 <TextView
@@ -134,18 +138,20 @@
                     android:text="Reviews"
                     android:textStyle="bold"
                     android:textSize="16dp"
-                    android:textColor="@android:color/white"
+                    android:textColor="@android:color/black"
                     />
 
-                <ListView
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/lv_review_list"
-                    android:layout_margin="12dp"
-                    android:divider="#FFFFFF"
-                    >
-
-                </ListView>
+                    android:layout_marginLeft="8dp"
+                    android:text="Click here to read the reviews"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="16dp"
+                    android:onClick="displayReviews"
+                    />
 
             </LinearLayout>
 

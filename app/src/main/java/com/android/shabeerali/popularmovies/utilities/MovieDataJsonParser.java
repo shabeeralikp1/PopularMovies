@@ -8,6 +8,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  *  Utility Class for  parsing the JSON adat from moviedb server
  */
@@ -179,19 +182,23 @@ public class MovieDataJsonParser {
         JSONArray trailerArray = trailerInfoJson.getJSONArray(RESULTS);
 
 
-        trailersData = new String[trailerArray.length()];
+        List<String> myList = new ArrayList<String>();
+        //trailersData = new String[trailerArray.length()];
 
         for (int i = 0; i < trailerArray.length(); i++) {
             JSONObject trailerInfo = trailerArray.getJSONObject(i);
             String type = trailerInfo.getString(TYPE);
-            if(type.equals(TRAILER)) {
-                trailersData[trailerIndex] = trailerInfo.getString(TRAILER_KEY);
+            if (type.equals(TRAILER)) {
+                //trailersData[trailerIndex] = trailerInfo.getString(TRAILER_KEY);
                 trailerIndex++;
+                myList.add(trailerInfo.getString(TRAILER_KEY));
             }
         }
 
-        if(trailerIndex == 0) {
+        if (trailerIndex == 0) {
             trailersData = null;
+        } else {
+            trailersData = myList.toArray(new String[myList.size()]);
         }
 
         return trailersData;
@@ -226,11 +233,14 @@ public class MovieDataJsonParser {
 
         JSONArray reviewsArray = reviewsInfoJson.getJSONArray(RESULTS);
 
-        reviewsData = new String[reviewsArray.length()];
+        Log.e(TAG, "reviewsArray.length(): "  + " ," + reviewsArray.length());
+        if(reviewsArray.length() > 0) {
+            reviewsData = new String[reviewsArray.length()];
 
-        for (int i = 0; i < reviewsArray.length(); i++) {
-            JSONObject trailerInfo = reviewsArray.getJSONObject(i);
-            reviewsData[i] = trailerInfo.getString(REVIEW_CONTENT);
+            for (int i = 0; i < reviewsArray.length(); i++) {
+                JSONObject trailerInfo = reviewsArray.getJSONObject(i);
+                reviewsData[i] = trailerInfo.getString(REVIEW_CONTENT);
+            }
         }
 
         return reviewsData;

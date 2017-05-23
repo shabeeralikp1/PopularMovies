@@ -7,18 +7,18 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -33,7 +33,6 @@ import com.android.shabeerali.popularmovies.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import static com.android.shabeerali.popularmovies.data.FavoriteMovieContract.FavoriteMovieEntry.TABLE_NAME;
@@ -62,13 +61,13 @@ public class MovieDetailActivity extends AppCompatActivity {
     private LinearLayout mReviewsLayout;
 
     private ListView mTrailerList;
-    private ListView mReviewsList;
+    //private ListView mReviewsList;
 
-    private ArrayAdapter<String> trailerAdapter;
-    private ArrayList<String> trailerArrayList;
+    private TrailerAdapter trailerAdapter;
+    //private ArrayList<String> trailerArrayList;
 
-    private ArrayAdapter<String> reviewsAdapter;
-    private ArrayList<String> reviewsArrayList;
+    //private ArrayAdapter<String> reviewsAdapter;
+    //private ArrayList<String> reviewsArrayList;
 
 
 
@@ -101,20 +100,30 @@ public class MovieDetailActivity extends AppCompatActivity {
         mTrailerLayout = (LinearLayout) findViewById(R.id.ll_trailer_view);
         mReviewsLayout = (LinearLayout) findViewById(R.id.ll_review_view);
         mTrailerList = (ListView) findViewById(R.id.lv_trailer_list);
-        mReviewsList = (ListView) findViewById(R.id.lv_review_list);
+       // mReviewsList = (ListView) findViewById(R.id.lv_review_list);
 
-        trailerArrayList = new ArrayList<String>();
-        trailerAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.reviews_list, trailerArrayList);
+        //trailerArrayList = new ArrayList<String>();
+        //trailerAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.trailer_list, trailerArrayList);
+
+        trailerAdapter = new TrailerAdapter(this, null);
 
         // Here, you set the data in your ListView
         mTrailerList.setAdapter(trailerAdapter);
 
+        mTrailerList.setClickable(true);
+        mTrailerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-        reviewsArrayList = new ArrayList<String>();
-        reviewsAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.reviews_list, reviewsArrayList);
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                playTrailer(position);
+            }
+        });
+
+        //reviewsArrayList = new ArrayList<String>();
+        //reviewsAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.reviews_list, reviewsArrayList);
 
         // Here, you set the data in your ListView
-        mReviewsList.setAdapter(reviewsAdapter);
+       // mReviewsList.setAdapter(reviewsAdapter);
 
 
         mFavoriteMovie = (CheckBox) findViewById(R.id.bt_movie_favorite);
@@ -300,44 +309,68 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private void showTrailerInfo(String[] trailerKeys) {
 
-        if(trailerKeys.length != 0) {
+        if(trailerKeys != null) {
             Log.d("SHABEER  ", "Trailers");
             int index = 0;
             for (String key : trailerKeys) {
-                if(index == 2)
-                    break;
-                index++;
-                String entry = "Trailer " + index;
                 Log.d("SHABEER  ", "" + key);
-                trailerArrayList.add(entry);
+              //  trailerArrayList.add(entry);
             }
 
             mTrailerKeys = trailerKeys.clone();
-            setListViewHeightBasedOnChildren(mTrailerList);
+
             mTrailerLayout.setVisibility(View.VISIBLE);
+            trailerAdapter.setTrailersData(null);
             trailerAdapter.notifyDataSetChanged();
+            trailerAdapter.setTrailersData(mTrailerKeys);
+            setListViewHeightBasedOnChildren(mTrailerList);
+            trailerAdapter.notifyDataSetChanged();
+
         }
         checkForReviews();
     }
 
+    void playTrailer(int position) {
+        Log.d("SHABEER  ", "" + mTrailerKeys[position]);
+        String url = "https://www.youtube.com/watch?v=" + mTrailerKeys[position];
+        Intent yt_play = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        Intent chooser = Intent.createChooser(yt_play , "Open With");
+
+        if (yt_play .resolveActivity(getPackageManager()) != null) {
+            startActivity(chooser);
+        }
+    }
     private void showReviewInfo(String[] reviews) {
 
-        if(reviews.length != 0) {
+        if(reviews != null) {
             Log.d("SHABEER  ", "reviews");
-            for(String key :reviews) {
+            /*for(String key :reviews) {
                 Log.d("SHABEER  ", "" + key);
                 reviewsArrayList.add(key);
             }
 
-            Log.d("SHABEER  ", "" + reviewsArrayList);
+            Log.d("SHABEER  ", "" + reviewsArrayList);*/
             //setListViewHeightBasedOnChildren(mReviewsList);
             mReviewsLayout.setVisibility(View.VISIBLE);
-            reviewsAdapter.notifyDataSetChanged();
+            //reviewsAdapter.notifyDataSetChanged();
 
             mReviews = reviews.clone();
         }
 
 
+    }
+
+    public void  displayReviews(View view) {
+        Log.d("SHABEER  ", "displayReviews");
+
+        Context context = this;
+        Class destinationClass = MovieReviewsActivity.class;
+
+        Bundle b=new Bundle();
+        b.putStringArray("reviews", mReviews);
+        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
+        intentToStartDetailActivity.putExtras(b);
+        startActivity(intentToStartDetailActivity);
     }
 
     public class FetchMovieTrailersTask extends AsyncTask<String, Void, String[]> {
@@ -424,7 +457,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
 
     public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
+        TrailerAdapter listAdapter = (TrailerAdapter)listView.getAdapter();
         if (listAdapter == null) {
             // pre-condition
             return;
