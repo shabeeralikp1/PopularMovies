@@ -61,16 +61,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     private LinearLayout mReviewsLayout;
 
     private ListView mTrailerList;
-    //private ListView mReviewsList;
-
     private TrailerAdapter trailerAdapter;
-    //private ArrayList<String> trailerArrayList;
 
-    //private ArrayAdapter<String> reviewsAdapter;
-    //private ArrayList<String> reviewsArrayList;
-
-
-
+    private static final String TAG = MovieDetailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,14 +93,9 @@ public class MovieDetailActivity extends AppCompatActivity {
         mTrailerLayout = (LinearLayout) findViewById(R.id.ll_trailer_view);
         mReviewsLayout = (LinearLayout) findViewById(R.id.ll_review_view);
         mTrailerList = (ListView) findViewById(R.id.lv_trailer_list);
-       // mReviewsList = (ListView) findViewById(R.id.lv_review_list);
-
-        //trailerArrayList = new ArrayList<String>();
-        //trailerAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.trailer_list, trailerArrayList);
 
         trailerAdapter = new TrailerAdapter(this, null);
 
-        // Here, you set the data in your ListView
         mTrailerList.setAdapter(trailerAdapter);
 
         mTrailerList.setClickable(true);
@@ -119,23 +107,14 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
         });
 
-        //reviewsArrayList = new ArrayList<String>();
-        //reviewsAdapter = new ArrayAdapter<String>(getApplicationContext(),R.layout.reviews_list, reviewsArrayList);
-
-        // Here, you set the data in your ListView
-       // mReviewsList.setAdapter(reviewsAdapter);
-
 
         mFavoriteMovie = (CheckBox) findViewById(R.id.bt_movie_favorite);
         NetworkUtils.setResponselanguage(Locale.getDefault().toString());
 
         Intent intentThatStartedThisActivity = getIntent();
 
-        // Create a DB helper (this will create the DB if run for the first time)
         FavoriteMovieDbHelper dbHelper = new FavoriteMovieDbHelper(this);
 
-        // Keep a reference to the mDb until paused or killed. Get a writable database
-        // because you will be adding restaurant customers
         mDb = dbHelper.getWritableDatabase();
 
         if (intentThatStartedThisActivity != null) {
@@ -148,6 +127,8 @@ public class MovieDetailActivity extends AppCompatActivity {
                 showErrorMessage(MovieDetailActivity.this.getResources().getString(R.string.no_internet_connection));
             }
         }
+
+        showFavoriteMovies();
 
     }
 
@@ -254,6 +235,7 @@ public class MovieDetailActivity extends AppCompatActivity {
             removeFavorite(movie_id);
             Toast.makeText(this, "Removed from favorites",Toast.LENGTH_SHORT).show();
         }
+        showFavoriteMovies();
     }
 
 
@@ -270,18 +252,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         return mDb.delete(FavoriteMovieContract.FavoriteMovieEntry.TABLE_NAME, FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID + "=" + id, null) > 0;
     }
 
-
-    private Cursor getAllFavorites() {
-        return mDb.query(
-                TABLE_NAME,
-                null,
-                null,
-                null,
-                null,
-                null,
-                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID
-        );
-    }
 
     private boolean IsMovieInFavorites(int movie_id) {
 
@@ -310,13 +280,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void showTrailerInfo(String[] trailerKeys) {
 
         if(trailerKeys != null) {
-            Log.d("SHABEER  ", "Trailers");
-            int index = 0;
-            for (String key : trailerKeys) {
-                Log.d("SHABEER  ", "" + key);
-              //  trailerArrayList.add(entry);
-            }
-
             mTrailerKeys = trailerKeys.clone();
 
             mTrailerLayout.setVisibility(View.VISIBLE);
@@ -331,7 +294,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     void playTrailer(int position) {
-        Log.d("SHABEER  ", "" + mTrailerKeys[position]);
         String url = "https://www.youtube.com/watch?v=" + mTrailerKeys[position];
         Intent yt_play = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         Intent chooser = Intent.createChooser(yt_play , "Open With");
@@ -343,17 +305,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     private void showReviewInfo(String[] reviews) {
 
         if(reviews != null) {
-            Log.d("SHABEER  ", "reviews");
-            /*for(String key :reviews) {
-                Log.d("SHABEER  ", "" + key);
-                reviewsArrayList.add(key);
-            }
-
-            Log.d("SHABEER  ", "" + reviewsArrayList);*/
-            //setListViewHeightBasedOnChildren(mReviewsList);
             mReviewsLayout.setVisibility(View.VISIBLE);
-            //reviewsAdapter.notifyDataSetChanged();
-
             mReviews = reviews.clone();
         }
 
@@ -361,8 +313,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     public void  displayReviews(View view) {
-        Log.d("SHABEER  ", "displayReviews");
-
         Context context = this;
         Class destinationClass = MovieReviewsActivity.class;
 
@@ -377,7 +327,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -388,19 +337,14 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
 
             String movie_id = params[0];
-            //URL moviesRequestUrl = NetworkUtils.buildUrl(fetch_filter);
             URL trailerRequestUrl = NetworkUtils.getMovieRequestsUrl(NetworkUtils.GET_TRAILER_DETAILS, movie_id);
 
             try {
                 String jsonMovieInfoResponse = NetworkUtils
                         .getResponseFromHttpUrl(trailerRequestUrl);
-
-                Log.e("SHABEER", "" + jsonMovieInfoResponse);
-
                 String[] trailerKeys = MovieDataJsonParser
                         .parseTrailerInformation(jsonMovieInfoResponse);
 
-                Log.e("SHABEER", "" + trailerKeys);
                 return trailerKeys;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -418,7 +362,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //mLoadingIndicator.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -429,18 +372,14 @@ public class MovieDetailActivity extends AppCompatActivity {
             }
 
             String movie_id = params[0];
-            //URL moviesRequestUrl = NetworkUtils.buildUrl(fetch_filter);
             URL trailerRequestUrl = NetworkUtils.getMovieRequestsUrl(NetworkUtils.GET_REVIEW_DETAILS, movie_id);
 
             try {
                 String jsonMovieInfoResponse = NetworkUtils
                         .getResponseFromHttpUrl(trailerRequestUrl);
 
-                Log.e("SHABEER", "" + jsonMovieInfoResponse);
-
                 String[] reviews = MovieDataJsonParser
                         .parseReviewInformation(jsonMovieInfoResponse);
-                Log.e("SHABEER", "" + reviews);
                 return reviews;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -450,7 +389,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String[] reviews) {
-            //mLoadingIndicator.setVisibility(View.INVISIBLE);
                 showReviewInfo(reviews);
         }
     }
@@ -474,6 +412,38 @@ public class MovieDetailActivity extends AppCompatActivity {
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
         listView.requestLayout();
+    }
+
+    private Cursor getAllFavorites() {
+        return mDb.query(
+                TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_ID
+        );
+    }
+
+    private void showFavoriteMovies() {
+        Cursor cursor = getAllFavorites();
+
+        MovieObject[] movieObjects;
+
+        int element_count = cursor.getCount();
+
+        if(element_count != 0) {
+
+            int index = 0;
+            while (cursor.moveToNext()) {
+
+                String name = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovieEntry.COLUMN_MOVIE_NAME));
+                Log.d(TAG, "  " + name);
+            }
+        }
+
+        cursor.close();
     }
 
 }

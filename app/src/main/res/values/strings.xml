@@ -4,7 +4,15 @@
     <string name="no_internet_connection">Internet connection not available.Please try agian</string>
     <string name="movies_most_popular">Most Popular</string>
     <string name="movies_top_rated">Top Rated</string>
+    <string name="movies_my_favorites">My Favorites</string>
     <string name="try_again">Try Again</string>
+
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
+    <string name="read_reviews">Click here to read the reviews</string>
+
+    <string name="no_favorite_movies">There are no favorite movies added</string>
+
 
     <!-- - - - - - - - - - - - - -->
     <!-- Attribution text for using TMDb APIs -->

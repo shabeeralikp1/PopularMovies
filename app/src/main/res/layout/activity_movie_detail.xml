@@ -2,8 +2,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="0dp"
-    android:layout_margin="0dp">
+    android:padding="@dimen/layout_padding_0"
+    android:layout_margin="@dimen/layout_margin_0">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,65 +15,62 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@android:color/holo_blue_dark"
-                android:textSize="24dp"
-                android:textColor="@android:color/black"
-                android:padding="16dp"
+                android:layout_height="@dimen/movie_detail_name_layout_height"
+                android:background="@color/colorPrimary"
+                android:textSize="@dimen/movie_detail_name_text_size"
+                android:textColor="@android:color/white"
+                android:padding="@dimen/padding_16"
                 android:id="@+id/tv_movie_name"
                 android:textStyle="bold"
-                android:gravity="center_vertical"
-                />
+                android:gravity="center_vertical"/>
 
             <ImageView
                 android:id="@+id/iv_detail_view"
-                android:layout_marginTop="0dp"
-                android:layout_width="150dp"
-                android:layout_height="225dp"
+                android:layout_marginTop="@dimen/layout_margin_0"
+                android:layout_width="@dimen/movie_detail_poster_width"
+                android:layout_height="@dimen/movie_detail_poster_height"
                 android:scaleType="centerCrop"
                 android:layout_gravity="left"
-                android:layout_marginLeft="0dp"
-                android:layout_below="@+id/tv_movie_name"
-                />
-
+                android:layout_marginLeft="@dimen/layout_margin_0"
+                android:layout_below="@+id/tv_movie_name"/>
 
             <TextView
-            android:id="@+id/tv_movie_date_rating"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_movie_name"
-            android:layout_toRightOf="@id/iv_detail_view"
-            android:textColor="@android:color/black"
-            android:layout_marginLeft="16dp"
-            android:textSize="16dp"
-            android:layout_marginTop="80dp"/>
-
+                android:id="@+id/tv_movie_date_rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_movie_name"
+                android:layout_toRightOf="@id/iv_detail_view"
+                android:textColor="@android:color/black"
+                android:layout_marginLeft="@dimen/margin_16"
+                android:textSize="@dimen/movie_detail_rating_text_size"
+                android:layout_marginTop="@dimen/movie_detail_rating_margin_top"/>
 
             <CheckBox
                 android:button="@android:drawable/btn_star"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/movie_detail_favorite_btn_width"
+                android:layout_height="@dimen/movie_detail_favorite_btn_height"
                 android:id="@+id/bt_movie_favorite"
                 android:background="@android:color/transparent"
                 android:layout_gravity="center"
                 android:layout_below="@id/tv_movie_date_rating"
                 android:layout_toRightOf="@id/iv_detail_view"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginLeft="@dimen/margin_16"
+                android:layout_marginTop="@dimen/margin_32"
                 android:onClick="handleFavourite"/>
 
             <TextView
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="@dimen/margin_32"
                 android:id="@+id/tv_movie_overview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/iv_detail_view"
                 android:textColor="@android:color/black"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:textSize="16dp"/>
+                android:layout_marginLeft="@dimen/margin_8"
+                android:layout_marginRight="@dimen/margin_8"
+                android:textSize="@dimen/movie_detail_overview_text_size"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -81,36 +78,31 @@
                 android:id="@+id/ll_trailer_view"
                 android:layout_below="@id/tv_movie_overview"
                 android:visibility="gone"
-                android:layout_margin="8dp"
                 android:orientation="vertical">
 
                 <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@android:color/black"
-                android:layout_margin="8dp"
-                />
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/black"
+                    android:layout_margin="@dimen/margin_8"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:text="Trailers"
+                    android:layout_marginLeft="@dimen/margin_8"
+                    android:text="@string/trailers"
                     android:textStyle="bold"
-                    android:textSize="16dp"
-                    android:textColor="@android:color/black"
-                    />
+                    android:textSize="@dimen/text_size_24"
+                    android:textColor="@android:color/black"/>
 
                 <ListView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/lv_trailer_list"
-                    android:layout_margin="16dp"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:layout_marginLeft="@dimen/margin_32"
                     android:divider="@android:color/transparent"
-                    android:dividerHeight="10.0sp"
-                    >
-
-                </ListView>
-
+                    android:dividerHeight="@dimen/list_view_divider_height"/>
             </LinearLayout>
 
             <LinearLayout
@@ -119,44 +111,45 @@
                 android:id="@+id/ll_review_view"
                 android:layout_below="@id/ll_trailer_view"
                 android:visibility="gone"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
                 android:orientation="vertical">
+
+            <!--LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/ll_review_view"
+                android:layout_below="@id/ll_trailer_view"
+                android:visibility="gone"
+                android:layout_marginLeft="@dimen/margin_8"
+                android:layout_marginRight="@dimen/margin_8"
+                android:layout_marginTop="@dimen/margin_16"
+                android:layout_marginBottom="@dimen/margin_16"
+                android:orientation="vertical"-->
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:background="@android:color/black"
-                    android:layout_margin="8dp"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:text="Reviews"
-                    android:textStyle="bold"
-                    android:textSize="16dp"
-                    android:textColor="@android:color/black"
-                    />
+                    android:layout_margin="@dimen/margin_8"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:text="Click here to read the reviews"
+                    android:layout_marginLeft="@dimen/margin_8"
+                    android:text="@string/reviews"
                     android:textStyle="bold"
-                    android:textSize="16dp"
-                    android:textColor="@android:color/black"
-                    android:layout_marginTop="16dp"
-                    android:onClick="displayReviews"
-                    />
+                    android:textSize="@dimen/text_size_24"
+                    android:textColor="@android:color/black"/>
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_8"
+                    android:text="@string/read_reviews"
+                    android:textSize="@dimen/text_size_16"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:onClick="displayReviews"/>
             </LinearLayout>
-
-
-
         </RelativeLayout>
     </ScrollView>
 
@@ -173,9 +166,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="16dp"
+            android:padding="@dimen/padding_16"
             android:text="@string/error_message"
-            android:textSize="20sp" />
+            android:textSize="@dimen/error_message_text_size" />
 
         <Button
             android:layout_width="wrap_content"
@@ -183,17 +176,13 @@
             android:id="@+id/bt_mv_detail_try_again"
             android:text="@string/try_again"
             android:layout_gravity="center"
-            android:textSize="16sp"
-            />
+            android:textSize="@dimen/text_size_16" />
     </LinearLayout>
-
 
     <ProgressBar
         android:id="@+id/pb_mv_detail_loading_indicator"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
+        android:layout_width="@dimen/loading_indicator_width"
+        android:layout_height="@dimen/loading_indicator_height"
         android:layout_gravity="center"
         android:visibility="invisible" />
-
-
 </FrameLayout>

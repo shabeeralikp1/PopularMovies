@@ -13,33 +13,46 @@
             <LinearLayout
                 android:id="@+id/filter"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:visibility="visible">
 
                 <RadioGroup
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
+                    android:layout_height="match_parent"
                     android:clickable="true"
                     android:orientation="horizontal"
                     android:gravity="center_horizontal"
                     android:id="@+id/rg_filter"
-                    android:layout_marginTop="20dp">
+                    android:layout_marginTop="@dimen/margin_16"
+                    android:layout_marginLeft="@dimen/margin_16"
+                    android:layout_marginRight="@dimen/margin_16"
+                    android:layout_marginBottom="@dimen/margin_16">
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/movies_most_popular"
                         android:id="@+id/rb_most_popular"
-                        android:textSize="24sp"/>
+                        android:textSize="@dimen/radio_button_text_size"
+                        android:layout_weight="1"/>
 
                     <RadioButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/movies_top_rated"
                         android:id="@+id/rb_top_rated"
-                        android:textSize="24sp"
-                        android:layout_marginLeft="8dp"/>
+                        android:textSize="@dimen/radio_button_text_size"
+                        android:layout_weight="1"
+                        />
+
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/movies_my_favorites"
+                        android:id="@+id/rb_my_fav"
+                        android:textSize="@dimen/radio_button_text_size"
+                        android:layout_weight="1"/>
 
                 </RadioGroup>
             </LinearLayout>
@@ -62,9 +75,9 @@
                     android:id="@+id/tv_error_message_display"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="16dp"
+                    android:padding="@dimen/padding_16"
                     android:text="@string/error_message"
-                    android:textSize="24sp"
+                    android:textSize="@dimen/error_message_text_size"
                     android:gravity="center"
                     android:layout_centerInParent="true"/>
 
@@ -75,14 +88,14 @@
                     android:text="@string/try_again"
                     android:gravity="center"
                     android:layout_centerInParent="true"
-                    android:textSize="24sp"/>
+                    android:textSize="@dimen/error_message_button_text_size"/>
 
             </LinearLayout>
 
             <ProgressBar
                 android:id="@+id/pb_loading_indicator"
-                android:layout_height="50dp"
-                android:layout_width="50dp"
+                android:layout_height="@dimen/loading_indicator_height"
+                android:layout_width="@dimen/loading_indicator_width"
                 android:layout_centerInParent="true"
                 android:visibility="invisible" />
         </RelativeLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="layout_left_margin">8dp</dimen>
+    <dimen name="layout_right_margin">8dp</dimen>
+    <dimen name="layout_top_margin">8dp</dimen>
+    <dimen name="layout_bottom_margin">8dp</dimen>
+
+    <dimen name="layout_margin_0">0dp</dimen>
+    <dimen name="layout_padding_0">0dp</dimen>
+
+    <dimen name="padding_16">16dp</dimen>
+    <dimen name="margin_16">16dp</dimen>
+
+    <dimen name="padding_8">8dp</dimen>
+    <dimen name="margin_8">8dp</dimen>
+
+    <dimen name="padding_32">32dp</dimen>
+    <dimen name="margin_32">32dp</dimen>
+
+    <dimen name="text_size_8">8sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="text_size_32">32sp</dimen>
+
+    <dimen name="radio_button_text_size">18sp</dimen>
+
+    <dimen name="error_message_text_size">20sp</dimen>
+
+    <dimen name="error_message_button_text_size">16sp</dimen>
+
+    <dimen name="loading_indicator_height">42dp</dimen>
+    <dimen name="loading_indicator_width">42dp</dimen>
+
+    <dimen name="movie_detail_name_layout_height">100dp</dimen>
+    <dimen name="movie_detail_name_text_size">24sp</dimen>
+
+    <dimen name="movie_detail_poster_height">250dp</dimen>
+    <dimen name="movie_detail_poster_width">200dp</dimen>
+
+    <dimen name="movie_detail_rating_text_size">16sp</dimen>
+    <dimen name="movie_detail_rating_margin_top">80dp</dimen>
+
+    <dimen name="movie_detail_overview_text_size">16sp</dimen>
+
+    <dimen name="movie_detail_favorite_btn_height">32dp</dimen>
+    <dimen name="movie_detail_favorite_btn_width">32dp</dimen>
+
+    <dimen name="list_view_divider_height">3dp</dimen>
+
+    <integer name="number_of_grid_columns">3</integer>
+
+</resources>

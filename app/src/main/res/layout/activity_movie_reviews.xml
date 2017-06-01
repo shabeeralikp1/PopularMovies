@@ -8,8 +8,8 @@
             android:id="@+id/lv_review_list"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_margin="12dp"
+            android:layout_margin="@dimen/margin_16"
             android:divider="@android:color/black"
-            android:dividerHeight="3dp">
+            android:dividerHeight="@dimen/list_view_divider_height">
         </ListView>
 </LinearLayout>

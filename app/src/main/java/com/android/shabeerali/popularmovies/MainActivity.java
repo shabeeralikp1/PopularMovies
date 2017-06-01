@@ -51,16 +51,14 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
     private SQLiteDatabase mDb;
 
-    private static final String TAG = NetworkUtils.class.getSimpleName();
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d("SHABEER", "onCreate ");
-
+        Log.d(TAG, "onCreate ");
         setContentView(R.layout.activity_main);
-
         NetworkUtils.setApiKey(this.getResources().getString(R.string.api_key));
 
         main_context = this;
@@ -82,16 +80,9 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
         NetworkUtils.setResponselanguage(Locale.getDefault().toString());
 
-        if (config.smallestScreenWidthDp >= 720) {
-            lLayout = new GridLayoutManager(MainActivity.this, 3);
-            //NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W780);
-        } else  if (config.smallestScreenWidthDp >= 600) {
-            lLayout = new GridLayoutManager(MainActivity.this,2);
-           // NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W500);
-        } else {
-            lLayout = new GridLayoutManager(MainActivity.this, 2);
-           // NetworkUtils.setImageSize(NetworkUtils.MOVIES_DB_IMAGE_SIZE_W185);
-        }
+        final int columns = this.getResources().getInteger(R.integer.number_of_grid_columns);
+
+        lLayout = new GridLayoutManager(MainActivity.this, columns);
 
         mRecyclerView = (RecyclerView)findViewById(R.id.rv_movie_posters);
         mRecyclerView.setHasFixedSize(true);
@@ -112,9 +103,6 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         FavoriteMovieDbHelper dbHelper = new FavoriteMovieDbHelper(this);
 
         mDb = dbHelper.getReadableDatabase();
-
-
-
 
         mCheckedRadioId = -1;
         if( savedInstanceState != null) {
@@ -139,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
                 break;
         }
 
+        mTryAgainButton.setVisibility(View.VISIBLE);
         if(isOnline()) {
             showMovieDataView();
             if( filter != "my_favourite") {
@@ -152,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     }
 
     private void showFavoriteMovies() {
+        Log.d(TAG, " showFavoriteMovies");
         Cursor cursor = getAllFavorites();
 
         MovieObject[] movieObjects;
@@ -176,9 +166,12 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
 
             showMovieDataView();
             mMoviewAdapter.setMoviesData(movieObjects);
+        } else {
+            showErrorMessage(this.getResources().getString(R.string.no_favorite_movies));
+            mTryAgainButton.setVisibility(View.GONE);
         }
 
-
+        cursor.close();
     }
 
     private void showMovieDataView() {
@@ -271,17 +264,22 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause ");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume ");
         int checkedId = mRadioGroup.getCheckedRadioButtonId();
         if(checkedId == -1) {
             mRbMostPopular.setChecked(true);
-        } else {
-            mMoviewAdapter.setMoviesData(null);
+        } else if(checkedId == R.id.rb_my_fav) {
+            //mMoviewAdapter.setMoviesData(null);
             loadMoviesData(mRadioGroup.getCheckedRadioButtonId());
+        } else {
+            //mMoviewAdapter.setMoviesData(null);
+            //loadMoviesData(mRadioGroup.getCheckedRadioButtonId());
         }
     }
 
